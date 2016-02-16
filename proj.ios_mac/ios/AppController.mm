@@ -27,6 +27,7 @@
 #import "cocos2d.h"
 #import "AppDelegate.h"
 #import "RootViewController.h"
+#import <GoogleSignIn/GoogleSignIn.h>
 
 @implementation AppController
 
@@ -143,6 +144,14 @@ static AppDelegate s_sharedApplication;
 - (void)dealloc {
     [window release];
     [super dealloc];
+}
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
+
+    return [[GIDSignIn sharedInstance] handleURL:url sourceApplication:sourceApplication annotation:annotation];
 }
 
 

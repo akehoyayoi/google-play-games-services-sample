@@ -27,7 +27,21 @@
 #import "cocos2d.h"
 #import "platform/ios/CCEAGLView-ios.h"
 
+#include "StateManager.h"
+#import <GoogleSignIn/GoogleSignIn.h>
+
+#define CLIENT_ID @"533337499979-3gesd9pm7ocb4bcksji4hljnljqilrfm.apps.googleusercontent.com"
+
+@interface RootViewController() <GIDSignInUIDelegate> {
+    StateManager* _stateManager;
+}
+
+- (void)setupGPG;
+
+@end
+
 @implementation RootViewController
+
 
 /*
  // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
@@ -45,13 +59,13 @@
 }
 */
 
-/*
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self setupGPG];
 }
 
-*/
 // Override to allow orientations other than the default portrait orientation.
 // This method is deprecated on ios6
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -108,6 +122,18 @@
 
 - (void)dealloc {
     [super dealloc];
+}
+
+- (void)setupGPG {
+    // use this view to manage the sign in UI
+    [GIDSignIn sharedInstance].uiDelegate = self;
+
+    gpg::IosPlatformConfiguration config;
+    config.SetClientID(CLIENT_ID.UTF8String);
+    config.SetOptionalViewControllerForPopups(self);
+
+    _stateManager = StateManager::getInstance();
+    _stateManager->initServices(config);
 }
 
 
